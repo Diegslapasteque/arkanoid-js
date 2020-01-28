@@ -1,1 +1,1 @@
-# arkanoid-js
+# Arkanoid JS
