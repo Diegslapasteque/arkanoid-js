@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background-color: #000;
+    color: #FFF;
+    font-family: 'Press Start 2P', sans-serif;
+}
+
+.page {
+    text-align: center;
+}
+
+#game {
+    margin: 0 auto;
+}
+
+.gameContainer {
+    display: inline-flex;
+    flex-direction: column;
+    height: 100vh;
+    align-items: stretch;
+}
+
+.infosContainer {
+    display: flex;
+}
+
+.livesContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    max-height: 100%;
+}
+
+.playerImg {
+    height: 0.7rem;
+}
+
+.livesContainer * {
+    margin: 0.1em 0.5em;
+}
+
+.flexContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Arkanoids</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    
+    <div class="page">
+        <section class="gameContainer">
+            <canvas id="game"></canvas>
+
+            <section class="infosContainer">
+                <div class="livesContainer">
+                    <img class="playerImg" src="assets/player.png" alt="player">
+                    <div class="flexContainer">x <h2 id="lives">0</h2></div>
+                </div>
+                <div class="powerupContainer"></div>
+            </section>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/assets.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/class.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
