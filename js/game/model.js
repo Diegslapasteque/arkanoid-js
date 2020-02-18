@@ -21,7 +21,7 @@ var Model = {
     powerup_data: {
         // Bonus
         increasePlayerWidth: {
-            prob: 0,
+            prob: 0.2,
             activationTime: 15, // seconds
             activateAction: null,
             desactivateAction: null,
@@ -29,14 +29,14 @@ var Model = {
             image: 'assets/powerups/increasePlayerWidth.png'
         },
         tripleBalls: {
-            prob: 0,
+            prob: 0.2,
             activationTime: 0,
             activateAction: null,
             desactivateAction: null,
             image: 'assets/powerups/tripleBalls.png'
         },
         increasePlayerSpeed: {
-            prob: 0,
+            prob: 0.2,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -44,7 +44,7 @@ var Model = {
             image: 'assets/powerups/increasePlayerSpeed.png'
         },
         playerShoot: {
-            prob: 0,
+            prob: 0.2,
             activationTime: 10,
             activateAction: null,
             desactivateAction: null,
@@ -53,7 +53,7 @@ var Model = {
         },
         // Malus
         decreasePlayerWidth: {
-            prob: 0,
+            prob: 0.05,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -61,7 +61,7 @@ var Model = {
             image: 'assets/powerups/decreasePlayerWidth.png'
         },
         reverseControls: {
-            prob: 0,
+            prob: 0.05,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -69,7 +69,7 @@ var Model = {
             powerupsResetAtActivation: ['reverseControls'],
         },
         decreasePlayerSpeed: {
-            prob: 0,
+            prob: 0.05,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -77,7 +77,7 @@ var Model = {
             image: 'assets/powerups/decreasePlayerSpeed.png'
         },
         increaseBallSpeed: {
-            prob: 0,
+            prob: 0.05,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -85,14 +85,14 @@ var Model = {
             image: 'assets/powerups/increaseBallSpeed.png'
         },
         bomb: {
-            prob: 1,
+            prob: 0.05,
             activationTime: 0,
             activateAction: null,
             desactivateAction: null,
             image: 'assets/powerups/bomb.png'
         },
     },
-    POWERUP_SPEED: 5,
+    POWERUP_SPEED: 3,
     activePowerups: [],
 
     // Sons
@@ -152,7 +152,7 @@ var Model = {
     background: null,
 
     // Level
-    currentLevel: 5,
+    currentLevel: 4,
     map: null,
 
     // Contrôles du clavier
@@ -180,14 +180,14 @@ var Model = {
     PLAYER_Y: null,
     PLAYER_WIDTH: null,
     PLAYER_HEIGHT: null,
-    PLAYER_SPEED: 8,
+    PLAYER_SPEED: 10,
     // ball
     BALL_TYPE: 'ball',
     BALL_X: null,
     BALL_Y: null,
     BALL_WIDTH: null,
     BALL_HEIGHT: null,
-    BALL_SPEED: 10,
+    BALL_SPEED: 12,
     BALL_VX: 0.5,
     BALL_VY: -0.5,
     BALL_INCREASE_SPEED: 1.3,
@@ -207,16 +207,13 @@ var Model = {
     CANON_TYPE: 'canon',
 
     // Autres
-    maxArmorBrick: 0,
+    maxArmorBrick: 10,
     reloadTime: 0.3,
     lastShootTime: 0,
 
 
     // Méthodes
     init: function() {
-        // Récupération du niveau en cours
-        Model.map = LEVELS[Model.currentLevel];
-
         // Initialise certaines valeurs de base du jeu
         Model.initValues();
 
@@ -311,10 +308,14 @@ var Model = {
         Model.lives = Model.baseLives;
         Model.assetsLoaded = 0;
         Model.assetsToLoad = Object.keys(Model.soundsData).length + 1; // All the sounds + 1 graphic board
+        Model.currentLevel = 4;
         Model.GAME_WIDTH = window.innerHeight*0.9;
         Model.GAME_HEIGHT = window.innerHeight*0.9;
         Model.GAME_WALL_SIZE = Model.GAME_WIDTH/30;
         Model.ASSET_SIZE_MULTIPLE = (Model.GAME_WIDTH/ASSETS[Model.BACKGROUND_TYPE].sWidth) * 1.51;
+
+        // map
+        Model.map = LEVELS[Model.currentLevel];
 
         // player
         Model.PLAYER_WIDTH = ASSETS[Model.PLAYER_TYPE].sWidth*Model.ASSET_SIZE_MULTIPLE;
@@ -425,9 +426,6 @@ var Model = {
 
         // Génération des briques
         Model.resizeMap();
-        Model.maxArmorBrick = Math.max(...Model.map.map( (row) => {
-            return Math.max(...row);
-        }));
         for (let row=0; row<Model.map.length; row++) {
             for (let col=0; col<Model.map[row].length; col++) {
                 if(Model.map[row][col] !== 0) {
@@ -507,18 +505,22 @@ var Model = {
     getCollisionSideOnCanvas: function(element) {
         // left
         if(element.x < Model.GAME_WALL_SIZE) {
+            element.x = Model.GAME_WALL_SIZE;
             return Model.COLLISION_LEFT;
         }
         // right
         if(element.x > Model.GAME_WIDTH-element.width-Model.GAME_WALL_SIZE) {
+            element.x = Model.GAME_WIDTH-element.width-Model.GAME_WALL_SIZE;
             return Model.COLLISION_RIGHT;
         }
         // top
         if(element.y < Model.GAME_WALL_SIZE) {
+            element.y = Model.GAME_WALL_SIZE;
             return Model.COLLISION_TOP;
         }
         // bottom
         if (element.y > Model.GAME_HEIGHT) {
+            element.y = Model.GAME_HEIGHT;
             return Model.COLLISION_BOTTOM;
         }
 
@@ -691,6 +693,8 @@ var Model = {
         Model.activePowerups = Model.activePowerups.filter( (activePowerup, index) => {
             if(powerupTypes.includes(activePowerup.type)) {
                 activePowerup.desactivate();
+                console.log('desactivate : '+activePowerup.type);
+                
                 Controller.powerupDesactivated(activePowerup);
                 return false;
             }
