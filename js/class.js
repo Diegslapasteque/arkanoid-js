@@ -2,12 +2,20 @@ class Asset {
     constructor(type, x, y, width, height) {
         this._x = Math.round(x);
         this._y = Math.round(y);
-        this._width = width;
-        this._height = height;
-        this._sX = ASSETS[type].sX;
-        this._sY = ASSETS[type].sY;
-        this._sWidth = ASSETS[type].sWidth;
-        this._sHeight = ASSETS[type].sHeight;
+        this._width = Math.round(width);
+        this._height = Math.round(height);
+
+        if(typeof ASSETS[type].src !== 'undefined') {
+            this._src = ASSETS[type].src;
+            this._frameIndex = 0;
+            this._frameSpeed = ASSETS[type].frameSpeed;
+        }
+        else {
+            this._sX = ASSETS[type].sX;
+            this._sY = ASSETS[type].sY;
+            this._sWidth = ASSETS[type].sWidth;
+            this._sHeight = ASSETS[type].sHeight;
+        }
     }
 
     get x() {
@@ -73,6 +81,54 @@ class Asset {
     set sHeight(value) {
         this._sHeight = value;
     }
+
+    get src() {
+        return this._src;
+    }
+
+    set src(value) {
+        this._src = value;
+    }
+
+    get frameIndex() {
+        return this._frameIndex;
+    }
+
+    set frameIndex(value) {
+        this._frameIndex = value;
+    }
+
+    get frameSpeed() {
+        return this._frameSpeed;
+    }
+
+    set frameSpeed(value) {
+        this._frameSpeed = value;
+    }
+
+    changeAsset(type, assetSizeMultiple) {
+        this._width = Math.round(ASSETS[type].sWidth*assetSizeMultiple);
+        this._height = Math.round(ASSETS[type].sHeight*assetSizeMultiple);
+
+        if(typeof ASSETS[type].src !== 'undefined') {
+            this._src = ASSETS[type].src;
+        }
+        else {
+            this._sX = ASSETS[type].sX;
+            this._sY = ASSETS[type].sY;
+            this._sWidth = ASSETS[type].sWidth;
+            this._sHeight = ASSETS[type].sHeight;
+        }
+    }
+
+    updateAnimation() {
+        if(typeof this.src !== 'undefined') {
+            this.frameIndex += this.frameSpeed;
+            if(Math.round(this.frameIndex) >= this.src.length) {
+                this.frameIndex = 0;
+            }
+        }
+    }
 }
 
 class MoveAsset extends Asset {
@@ -88,20 +144,34 @@ class MoveAsset extends Asset {
     set speed(value) {
         this._speed = value;
     }
+
+    move(moveX, moveY) {
+        this.x += moveX*this.speed;
+        this.y += moveY*this.speed;
+    }
 }
 
 class Player extends MoveAsset {
-    constructor(type, x, y, width, height, speed) {
+    constructor(type, x, y, width, height, speed, canShoot = false, controlsReversed = false) {
         super(type, x, y, width, height, speed);
-        this._isAlive = true;
+        this._canShoot = canShoot;
+        this._controlsReversed = controlsReversed
     }
 
-    get isAlive() {
-        return this._isAlive;
+    get canShoot() {
+        return this._canShoot;
     }
 
-    set isAlive(value) {
-        this._isAlive = value;
+    set canShoot(value) {
+        this._canShoot = value;
+    }
+
+    get controlsReversed() {
+        return this._controlsReversed;
+    }
+
+    set controlsReversed(value) {
+        this._controlsReversed = value;
     }
 
     move(move) {
@@ -110,10 +180,10 @@ class Player extends MoveAsset {
 }
 
 class Ball extends MoveAsset {
-    constructor(type, x, y, width, height, speed) {
+    constructor(type, x, y, width, height, speed, vX, vY) {
         super(type, x, y, width, height, speed);
-        this._velocityX = 0.5;
-        this._velocityY = -0.5;
+        this._velocityX = vX;
+        this._velocityY = vY;
     }
 
     get velocityX() {
@@ -138,11 +208,78 @@ class Ball extends MoveAsset {
     }
 }
 
+class Powerup extends MoveAsset {
+    constructor(type, image, x, y, width, height, speed, activateAction, desactivateAction = null, activationTime = 0, powerupsResetAtActivation = []) {
+        super(type, x, y, width, height, speed);
+        this._type = type;
+        this._image = image;
+        this._activateAction = activateAction;
+        this._desactivateAction = desactivateAction;
+        this._activationTime = activationTime;
+        this._powerupsResetAtActivation = powerupsResetAtActivation;
+    }
+
+    get type() {
+        return this._type;
+    }
+
+    get activationTime() {
+        return this._activationTime;
+    }
+
+    set activationTime(value) {
+        this._activationTime = value;
+    }
+
+    get powerupsResetAtActivation() {
+        return this._powerupsResetAtActivation;
+    }
+
+    get image() {
+        return this._image;
+    }
+
+    move() {
+        this.y += this.speed;
+    }
+
+    activate() {
+        this._activateAction();
+    }
+
+    canBeDesactivated() {
+        return this._desactivateAction !== null;
+    }
+
+    desactivate() {
+        if(this.canBeDesactivated()) {
+            this._desactivateAction();
+        }
+    }
+}
+
+class Missile extends MoveAsset {
+    constructor(type, x, y, width, height, speed) {
+        super(type, x, y, width, height, speed);
+    }
+}
+
+class Canon extends Asset {
+    constructor(type, x, y, width, height) {
+        super(type, x, y, width, height);
+    }
+
+    follow(sprite) {
+        this.x = sprite.x+sprite.width/2-this.width/2;
+        this.y = sprite.y-this.height;
+    }
+}
+
 class Brick extends Asset {
-    constructor(type, x, y, width, height, armor, powerup) {
+    constructor(type, x, y, width, height, armor, powerupName) {
         super(type, x, y, width, height);
         this._armor = armor;
-        this._powerup = powerup;
+        this._powerupName = powerupName;
         this.reloadAsset();
     }
 
@@ -154,8 +291,8 @@ class Brick extends Asset {
         this._armor = value;
     }
 
-    get powerup() {
-        return this._powerup;
+    get powerupName() {
+        return this._powerupName;
     }
 
     loseArmor() {

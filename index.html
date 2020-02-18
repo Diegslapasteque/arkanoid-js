@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-    
+
     <div class="page">
         <section class="gameContainer">
             <canvas id="game"></canvas>
@@ -21,17 +21,52 @@
             <section class="infosContainer">
                 <div class="livesContainer">
                     <img class="playerImg" src="assets/player.png" alt="player">
-                    <div class="flexContainer">x <h2 id="lives">0</h2></div>
+                    <div class="flexContainer">x <h2 class="lives">0</h2></div>
                 </div>
-                <div class="powerupContainer"></div>
+                <div class="powerupsContainer"></div>
+            </section>
+
+            <section class="textContainer">
+                <div class="menuText">
+                    <img class="logo" src="assets/logo.svg" alt="Arkanoid">
+                    <p class="normalText">Use Arrow keys to move and Space to shoot.</p>
+                    <p class="normalText specialText">Ready? Press Space to Play!</p>
+                </div>
+
+                <div class="endText">
+                    <h2 class="bigText">Congratulations! You beat all the levels!</h2>
+                    <p class="normalText">Press Space to restart</p>
+                </div>
+
+                <div class="deathText">
+                    <h2 class="bigText">Oh no! You died!</h2>
+                    <p class="normalText">Press Space to restart</p>
+                </div>
             </section>
         </section>
     </div>
+
+    <!-- Templates -->
+    <template class="powerupTemplate">
+        <div class="powerup">
+            <img class="powerup-img" src="" alt="">
+            <div class="powerup-loader">
+                <div class="powerup-loadbar"></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Libraries -->
+    <script src="lib/howler.min.js"></script>
 
     <!-- Scripts -->
     <script src="js/assets.js"></script>
     <script src="js/levels.js"></script>
     <script src="js/class.js"></script>
-    <script src="js/game.js"></script>
+
+    <script src="js/game/model.js"></script>
+    <script src="js/game/controller.js"></script>
+    <script src="js/game/view.js"></script>
+    <script>Controller.gameLoop();</script>
 </body>
 </html>

@@ -4,6 +4,10 @@ body {
     background-color: #000;
     color: #FFF;
     font-family: 'Press Start 2P', sans-serif;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .page {
@@ -19,19 +23,21 @@ body {
     flex-direction: column;
     height: 100vh;
     align-items: stretch;
+    position: relative;
 }
 
 .infosContainer {
     display: flex;
+    height: 10vh;
 }
 
 .livesContainer {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 30%;
     max-height: 100%;
+    flex-basis: 30%;
 }
 
 .playerImg {
@@ -46,4 +52,56 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.powerupsContainer {
+    flex-basis: 70%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.powerup-img {
+    height: 1rem;
+    image-rendering: crisp-edges;
+}
+
+.powerup-loader {
+    width: 100px;
+    height: 10px;
+    background-color: rgba(255,255,255, 0.2);
+}
+
+.powerup-loadbar {
+    width: 0;
+    background-color: yellow;
+    height: 100%;
+}
+
+.powerup {
+    margin: 0.5em 1em;
+}
+
+
+
+/* TEXT */
+.textContainer {
+    display: block;
+    position: absolute;
+    margin: 50% 3em 0;
+    transform: translateY(-50%);
+    width: calc(100% - 6rem);
+}
+
+.textContainer > * {
+    display: none;
+    line-height: 25px;
+}
+
+.logo {
+    max-width: 70%;
+}
+
+.specialText {
+    color: gold;
+    margin-top: 3em;
 }
