@@ -3,7 +3,6 @@ var Model = {
     baseLives: 3,
     lives: 0,
     canDie: true,
-    hasCollisionPreviousFrame: false,
 
     // assets
     assetsToLoad: 0,
@@ -21,7 +20,7 @@ var Model = {
     powerup_data: {
         // Bonus
         increasePlayerWidth: {
-            prob: 0.2,
+            prob: 1/3.25,
             activationTime: 15, // seconds
             activateAction: null,
             desactivateAction: null,
@@ -29,14 +28,14 @@ var Model = {
             image: 'assets/powerups/increasePlayerWidth.png'
         },
         tripleBalls: {
-            prob: 0.2,
+            prob: 1/3.25,
             activationTime: 0,
             activateAction: null,
             desactivateAction: null,
             image: 'assets/powerups/tripleBalls.png'
         },
         increasePlayerSpeed: {
-            prob: 0.2,
+            prob: 1/3.25,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -44,7 +43,7 @@ var Model = {
             image: 'assets/powerups/increasePlayerSpeed.png'
         },
         playerShoot: {
-            prob: 0.2,
+            prob: 1/3.25,
             activationTime: 10,
             activateAction: null,
             desactivateAction: null,
@@ -53,7 +52,7 @@ var Model = {
         },
         // Malus
         decreasePlayerWidth: {
-            prob: 0.05,
+            prob: 1/18,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -61,7 +60,7 @@ var Model = {
             image: 'assets/powerups/decreasePlayerWidth.png'
         },
         reverseControls: {
-            prob: 0.05,
+            prob: 1/18,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -69,7 +68,7 @@ var Model = {
             powerupsResetAtActivation: ['reverseControls'],
         },
         decreasePlayerSpeed: {
-            prob: 0.05,
+            prob: 1/18,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -77,7 +76,7 @@ var Model = {
             image: 'assets/powerups/decreasePlayerSpeed.png'
         },
         increaseBallSpeed: {
-            prob: 0.05,
+            prob: 1/18,
             activationTime: 15,
             activateAction: null,
             desactivateAction: null,
@@ -85,7 +84,7 @@ var Model = {
             image: 'assets/powerups/increaseBallSpeed.png'
         },
         bomb: {
-            prob: 0.05,
+            prob: 1/18,
             activationTime: 0,
             activateAction: null,
             desactivateAction: null,
@@ -152,7 +151,7 @@ var Model = {
     background: null,
 
     // Level
-    currentLevel: 4,
+    currentLevel: 0,
     map: null,
 
     // Contrôles du clavier
